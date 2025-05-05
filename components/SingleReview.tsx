@@ -54,7 +54,7 @@ const SingleReview = () => {
       </p>
       <a
         href="#"
-        className="block mb-5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+        className="block mb-5 text-sm font-medium text-orange-600 hover:underline dark:text-blue-500"
       >
         Read more
       </a>
@@ -71,7 +71,7 @@ const SingleReview = () => {
           </a>
           <a
             href="#"
-            className="ps-4 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 border-gray-200 ms-4 border-s md:mb-0 dark:border-gray-600"
+            className="ps-4 text-sm font-medium text-orange-600 hover:underline dark:text-blue-500 border-gray-200 ms-4 border-s md:mb-0 dark:border-gray-600"
           >
             Report abuse
           </a>
