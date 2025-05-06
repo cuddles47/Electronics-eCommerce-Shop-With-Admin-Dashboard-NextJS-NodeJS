@@ -11,6 +11,11 @@ const config: Config = {
       colors: {
         'custom-yellow':'#FED700',
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
       animation: {
         'ping': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
         'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
@@ -19,6 +24,7 @@ const config: Config = {
         'blob': 'blob 7s infinite',
         'twinkle': 'twinkle 3s ease-in-out infinite',
         'light-beam': 'light-beam 8s linear infinite',
+        "pulse-slow": "pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       keyframes: {
         ping: {
@@ -52,7 +58,7 @@ const config: Config = {
             transform: 'translate(0px, 0px) scale(1)',
           },
           '33%': {
-            transform: 'translate(30px, -20px) scale(1.1)',
+            transform: 'translate(30px, -50px) scale(1.1)',
           },
           '66%': {
             transform: 'translate(-20px, 20px) scale(0.9)',
@@ -83,12 +89,21 @@ const config: Config = {
             transform: 'translateX(200%) translateY(200%) rotate(-45deg)',
           },
         },
+        "pulse-slow": {
+          "0%, 100%": {
+            opacity: "1",
+          },
+          "50%": {
+            opacity: "0.8",
+          },
+        },
       },
       transitionDelay: {
         '0': '0ms',
         '700': '700ms',
         '1500': '1500ms',
         '2000': '2000ms',
+        "4000": "4000ms",
       },
       transitionProperty: {
         'width': 'width',
@@ -96,6 +111,24 @@ const config: Config = {
       },
     },
   },  
-  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms"), require("daisyui")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
+    require("daisyui"),
+    function ({ addUtilities }: any) {
+      const newUtilities = {
+        ".animation-delay-2000": {
+          "animation-delay": "2s",
+        },
+        ".animation-delay-4000": {
+          "animation-delay": "4s",
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
+  daisyui: {
+    themes: ["light"],
+  },
 };
 export default config;
