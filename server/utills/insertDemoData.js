@@ -6,7 +6,7 @@ const demoProducts = [
   {
     id: "1",
     title: "Smart phone",
-    price: 22,
+    price: 93990000,
     rating: 5,
     description: "This is smart phone description",
     mainImage: "product1.webp",
@@ -18,7 +18,7 @@ const demoProducts = [
   {
     id: "2",
     title: "SLR camera",
-    price: 24,
+    price: 42490000,
     rating: 0,
     description: "This is slr description",
     mainImage: "product2.webp",
@@ -30,7 +30,7 @@ const demoProducts = [
   {
     id: "3",
     title: "Mixer grinder",
-    price: 25,
+    price: 2590000,
     rating: 4,
     description: "This is mixed grinder description",
     mainImage: "product3.webp",
@@ -42,7 +42,7 @@ const demoProducts = [
   {
     id: "4",
     title: "Phone gimbal",
-    price: 21,
+    price: 2190000,
     rating: 5,
     description: "This is phone gimbal description",
     mainImage: "product4.webp",
@@ -54,7 +54,7 @@ const demoProducts = [
   {
     id: "5",
     title: "Tablet keyboard",
-    price: 52,
+    price: 5290000,
     rating: 4,
     description: "This is tablet keyboard description",
     mainImage: "product5.webp",
@@ -66,7 +66,7 @@ const demoProducts = [
   {
     id: "6",
     title: "Wireless earbuds",
-    price: 74,
+    price: 7490000,
     rating: 3,
     description: "This is earbuds description",
     mainImage: "product6.webp",
@@ -78,7 +78,7 @@ const demoProducts = [
   {
     id: "7",
     title: "Party speakers",
-    price: 35,
+    price: 13590000,
     rating: 5,
     description: "This is party speakers description",
     mainImage: "product7.webp",
@@ -90,7 +90,7 @@ const demoProducts = [
   {
     id: "8",
     title: "Slow juicer",
-    price: 69,
+    price: 6990000,
     rating: 5,
     description: "Slow juicer desc",
     mainImage: "product8.webp",
@@ -102,7 +102,7 @@ const demoProducts = [
   {
     id: "9",
     title: "Wireless headphones",
-    price: 89,
+    price: 8990000,
     rating: 3,
     description: "This is wireless headphones description",
     mainImage: "product9.webp",
@@ -114,7 +114,7 @@ const demoProducts = [
   {
     id: "10",
     title: "Smart watch",
-    price: 64,
+    price: 6490000,
     rating: 3,
     description: "This is smart watch description",
     mainImage: "product10.webp",
@@ -126,7 +126,7 @@ const demoProducts = [
   {
     id: "11",
     title: "Notebook horizon",
-    price: 52,
+    price: 52900000,
     rating: 5,
     description: "This is notebook description",
     mainImage: "product11.webp",
@@ -138,7 +138,7 @@ const demoProducts = [
   {
     id: "12",
     title: "Mens trimmer",
-    price: 54,
+    price: 1890000,
     rating: 5,
     description: "This is trimmer description",
     mainImage: "product12.webp",

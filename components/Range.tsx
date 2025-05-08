@@ -10,6 +10,7 @@
 
 "use client";
 import React, { useState } from 'react'
+import { formatCurrency } from "../utils/formatCurrency";
 
 interface RangeProps {
     min: number;
@@ -28,7 +29,11 @@ const Range = ({ min, max, priceValue, setInputCategory } : RangeProps) => {
   return (
     <div>
         <input type="range" min={min} max={max} value={priceValue} className="range range-warning" />
-        <span>{ `Max price: $${currentRangeValue}` }</span>
+        <div className="slider-labels mb-2 relative left-[5px]">
+          <div className="caption">
+            <span>{ `Max price: ${formatCurrency(currentRangeValue)}` }</span>
+          </div>
+        </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { formatCurrency } from "../../../../../utils/formatCurrency";
 
 interface OrderProduct {
   id: string;
@@ -306,7 +307,7 @@ const AdminSingleOrder = () => {
         </div>
 
         <div>
-          <label className="form-control w-full max-w-xs">
+          <label className="form-control">
             <div className="label">
               <span className="label-text">Order status</span>
             </div>
@@ -358,17 +359,17 @@ const AdminSingleOrder = () => {
                   {product?.product?.title}
                 </Link>
                 <p>
-                  ${product?.product?.price} * {product?.quantity} items
+                  {formatCurrency(product?.product?.price)} × {product?.quantity} items
                 </p>
               </div>
             </div>
           ))}
           <div className="flex flex-col gap-y-2 mt-10">
-            <p className="text-2xl">Subtotal: ${order?.total}</p>
-            <p className="text-2xl">Tax 20%: ${order?.total / 5}</p>
-            <p className="text-2xl">Shipping: $5</p>
+            <p className="text-2xl">Subtotal: {formatCurrency(order?.total)}</p>
+            <p className="text-2xl">Tax 20%: {formatCurrency(order?.total / 5)}</p>
+            <p className="text-2xl">Shipping: {formatCurrency(5)}</p>
             <p className="text-3xl font-semibold">
-              Total: ${order?.total + order?.total / 5 + 5}
+              Total: {formatCurrency(order?.total + order?.total / 5 + 5)}
             </p>
           </div>
           <div className="flex gap-x-2 max-sm:flex-col mt-5">

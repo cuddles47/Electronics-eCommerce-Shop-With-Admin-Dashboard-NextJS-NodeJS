@@ -12,6 +12,7 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import ProductItemRating from "./ProductItemRating";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const ProductItem = ({
   product,
@@ -53,7 +54,7 @@ const ProductItem = ({
             : "text-lg text-white font-semibold"
         }
       >
-        ${product.price}
+        {formatCurrency(product.price)}
       </p>
 
       <ProductItemRating productRating={product?.rating} />

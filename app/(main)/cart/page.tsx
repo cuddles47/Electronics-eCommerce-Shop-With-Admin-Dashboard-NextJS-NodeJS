@@ -12,6 +12,7 @@ import { FaCheck, FaClock, FaCircleQuestion, FaXmark } from "react-icons/fa6";
 import { useProductStore } from "../../_zustand/store";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { formatCurrency } from "../../../utils/formatCurrency";
 
 const CartPage = () => {
   const { products, removeFromCart, calculateTotals, total } =
@@ -73,7 +74,7 @@ const CartPage = () => {
                         ) : null}
                       </div> */}
                           <p className="mt-1 text-sm font-medium text-gray-900">
-                            ${product.price}
+                            {formatCurrency(product.price)}
                           </p>
                         </div>
 
@@ -129,7 +130,7 @@ const CartPage = () => {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${total}
+                    {formatCurrency(total)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -148,7 +149,9 @@ const CartPage = () => {
                       />
                     </a>
                   </dt>
-                  <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                  <dd className="text-sm font-medium text-gray-900">
+                    {formatCurrency(5)}
+                  </dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex text-sm text-gray-600">
@@ -167,7 +170,7 @@ const CartPage = () => {
                     </a>
                   </dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${total / 5}
+                    {formatCurrency(total / 5)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -175,17 +178,25 @@ const CartPage = () => {
                     Order total
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
-                    ${total === 0 ? 0 : Math.round(total + total / 5 + 5)}
+                    {formatCurrency(
+                      total === 0 ? 0 : Math.round(total + total / 5 + 5)
+                    )}
                   </dd>
                 </div>
               </dl>
+              <p className="mt-0.5 text-sm text-gray-500">
+                Shipping and taxes calculated at checkout.
+              </p>
               {products.length > 0 && (
                 <div className="mt-6">
                   <Link
                     href="/checkout"
-                    className="block flex justify-center items-center w-full uppercase bg-white px-4 py-3 text-base border border-black border-gray-300 font-bold text-orange-600 shadow-sm hover:bg-black hover:bg-gray-100 focus:outline-none focus:ring-2"
+                    className="flex items-center justify-center rounded-md border border-transparent bg-orange-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-600"
                   >
-                    <span>Checkout</span>
+                    Checkout{" "}
+                    {formatCurrency(
+                      total === 0 ? 0 : Math.round(total + total / 5 + 5)
+                    )}
                   </Link>
                 </div>
               )}

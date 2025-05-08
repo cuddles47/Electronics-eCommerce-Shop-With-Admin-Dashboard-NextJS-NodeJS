@@ -10,36 +10,52 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import { formatCurrency } from "../utils/formatCurrency";
 
-const RangeWithLabels = () => {
-  const [currentRangeWLabelsValue, setCurrentRangeWLabelsValue] =
-    useState<number>(0);
+interface RangeWithLabelsProps {
+  setMaxPrice: (price: number) => void;
+}
 
-  // function for handling range change
-  const handleRangeWLabelsValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentRangeWLabelsValue(parseInt(e.target.value));
+const RangeWithLabels: FC<RangeWithLabelsProps> = ({ setMaxPrice }) => {
+  const [value, setValue] = useState(4000);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setValue(Number(event.target.value));
   };
 
+  useEffect(() => {
+    setMaxPrice(value);
+  }, [value, setMaxPrice]);
+
   return (
-    <div>
-      <span className="label-text text-lg text-black">Price filter:</span>
-      <input
-        type="range"
-        min={0}
-        max="1000"
-        value={currentRangeWLabelsValue}
-        onChange={(e) => handleRangeWLabelsValue(e)}
-        className="range range-warning"
-        step="200"
-      />
-      <div className="w-full flex justify-between text-xs px-2">
-        <span>$0</span>
-        <span>$200</span>
-        <span>$400</span>
-        <span>$600</span>
-        <span>$4000</span>
+    <div className="mt-8">
+      <div className="slider-labels mb-2 relative left-[5px]">
+        <div className="caption">
+          <strong className="text-lg block mb-1">
+            Price range: {formatCurrency(0)} - {formatCurrency(value)}
+          </strong>
+        </div>
       </div>
+
+      <div className="mb-6">
+        <input
+          type="range"
+          min="0"
+          max="4000"
+          value={value}
+          step="100"
+          className="w-full h-2 bg-blue-100 accent-blue-600 rounded-lg appearance-none cursor-pointer"
+          onChange={handleChange}
+        />
+      </div>
+      <ul className="flex justify-between mt-2 w-full px-[4px]">
+        <span>{formatCurrency(0)}</span>
+        <span>{formatCurrency(200)}</span>
+        <span>{formatCurrency(400)}</span>
+        <span>{formatCurrency(600)}</span>
+        <span>{formatCurrency(4000)}</span>
+      </ul>
     </div>
   );
 };
