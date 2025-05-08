@@ -110,7 +110,7 @@ const AddToWishlistBtn = ({ product, slug }: AddToWishlistBtnProps) => {
 
   useEffect(() => {
     isInWishlist();
-  }, [session?.user?.email, wishlist]);
+  }, [session?.user?.email, wishlist, isInWishlist]);
 
   return (
     <>

@@ -45,7 +45,7 @@ const WishlistPage = () => {
 
   useEffect(() => {
     getUserByEmail();
-  }, [session?.user?.email, wishlist.length]);
+  }, [session?.user?.email, wishlist.length, getUserByEmail]);
   return (
     <div className="bg-white">
       <SectionTitle title="Wishlist" path="Home | Wishlist" />

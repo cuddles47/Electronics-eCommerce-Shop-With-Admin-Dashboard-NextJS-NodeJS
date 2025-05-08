@@ -132,7 +132,7 @@ const DashboardProductDetails = ({
   useEffect(() => {
     fetchCategories();
     fetchProductData();
-  }, [id]);
+  }, [id, fetchProductData]);
 
   return (
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">
@@ -265,9 +265,8 @@ const DashboardProductDetails = ({
             type="file"
             className="file-input file-input-bordered file-input-lg w-full max-w-sm"
             onChange={(e) => {
-              const selectedFile = e.target.files[0];
-
-              if (selectedFile) {
+              if (e.target.files && e.target.files.length > 0) {
+                const selectedFile = e.target.files[0];
                 uploadFile(selectedFile);
                 setProduct({ ...product!, mainImage: selectedFile.name });
               }
