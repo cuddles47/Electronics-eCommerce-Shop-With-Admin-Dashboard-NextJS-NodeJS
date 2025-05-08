@@ -74,8 +74,8 @@ const LoginPage = () => {
       {/* Logo and breadcrumb */}
       <div className="w-full px-4 py-6 flex justify-center">
         <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo v1 svg.svg" alt="Electronics Store" width={40} height={40} className="w-auto h-10" />
-          <span className="text-2xl font-bold text-gray-800">Electronics Store</span>
+          <Image src="/logo v1 svg.svg" alt="Hightech accessories" width={40} height={40} className="w-auto h-10" />
+          <span className="text-2xl font-bold text-gray-800">Hightech accessories</span>
         </Link>
       </div>
       
