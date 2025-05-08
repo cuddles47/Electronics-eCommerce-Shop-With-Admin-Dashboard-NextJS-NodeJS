@@ -1,7 +1,7 @@
 "use client";
 import { SectionTitle, WishItem } from "@/components";
 import React, { useEffect, useState } from "react";
-import { useWishlistStore } from "../_zustand/wishlistStore";
+import { useWishlistStore } from "../../_zustand/wishlistStore";
 import { nanoid } from "nanoid";
 import { useSession } from "next-auth/react";
 

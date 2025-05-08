@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 import React from "react";
 import { FaCheck, FaClock, FaCircleQuestion, FaXmark } from "react-icons/fa6";
-import { useProductStore } from "../_zustand/store";
+import { useProductStore } from "../../_zustand/store";
 import Link from "next/link";
 import toast from "react-hot-toast";
 

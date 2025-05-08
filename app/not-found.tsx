@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import NotFoundLayout from './not-found-layout'
  
 export default function NotFound() {
   return (
@@ -7,7 +8,7 @@ export default function NotFound() {
         <div className="text-center">
           <p className="text-lg font-semibold bg-orange-500  text-white border border-1 border-black py-2 rounded-full w-16 mx-auto">404</p>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-black sm:text-5xl">Page not found</h1>
-          <p className="mt-6 text-base leading-7 text-black">Sorry, we couldn’t find the page you’re looking for.</p>
+          <p className="mt-6 text-base leading-7 text-black">Sorry, we couldn't find the page you're looking for.</p>
           <div className="mt-10 flex items-center justify-center gap-x-6 max-[350px]:flex-col max-[350px]:gap-y-5">
             <Link
               href="/"
@@ -23,4 +24,8 @@ export default function NotFound() {
       </main>
     </>
   )
+}
+
+NotFound.getLayout = function getLayout(page: React.ReactElement) {
+  return <NotFoundLayout>{page}</NotFoundLayout>
 }
