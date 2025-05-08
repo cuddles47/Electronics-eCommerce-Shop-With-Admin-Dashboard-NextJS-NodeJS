@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import NotFoundLayout from './not-found-layout'
- 
+import Layout from './(dashboard)/layout' 
 export default function NotFound() {
   return (
     <>
@@ -27,5 +26,5 @@ export default function NotFound() {
 }
 
 NotFound.getLayout = function getLayout(page: React.ReactElement) {
-  return <NotFoundLayout>{page}</NotFoundLayout>
+  return <Layout>{page}</Layout>
 }
