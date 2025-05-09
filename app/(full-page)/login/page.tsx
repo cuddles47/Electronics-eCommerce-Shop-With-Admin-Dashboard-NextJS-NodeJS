@@ -190,24 +190,27 @@ const LoginPage = () => {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-2 text-gray-500">
-                  Or continue with
+                  Đăng nhập nhanh hơn với
                 </span>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="mt-6">
               <button
-                className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-3 text-gray-700 border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200"
-                onClick={() => signIn("google")}
+                className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-4 text-gray-700 border border-gray-300 shadow-md hover:shadow-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 transform hover:-translate-y-1"
+                onClick={() => {
+                  toast.loading("Đang kết nối với Google...");
+                  signIn("google", { callbackUrl: "/" });
+                }}
               >
-                <FcGoogle className="h-5 w-5" />
-                <span className="text-sm font-medium">
-                  Google
+                <FcGoogle className="h-6 w-6" />
+                <span className="text-base font-medium">
+                  Tiếp tục với Google
                 </span>
               </button>
 
               <button
-                className="flex w-full items-center justify-center gap-3 rounded-md bg-[#24292F] px-3 py-3 text-white shadow-sm hover:bg-[#1c2024] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#24292F] transition-all duration-200"
+                className="flex w-full items-center justify-center gap-3 rounded-md bg-[#24292F] px-3 py-3 text-white shadow-sm hover:bg-[#1c2024] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#24292F] transition-all duration-200 mt-3"
                 onClick={() => signIn("github")}
               >
                 <svg
