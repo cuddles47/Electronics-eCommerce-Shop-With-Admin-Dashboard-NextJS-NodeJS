@@ -151,12 +151,11 @@ const Header = () => {
           <SearchInput />
           <div className="flex gap-x-7 items-center">
             <HeartElement wishQuantity={wishQuantity} />
-            <CartElement />
-            {session?.user && (
-              <div className="hidden md:flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-2 px-4 rounded-full transition-all shadow-md hover:shadow-lg">
+            <CartElement />            {session?.user && (
+              <Link href="/orders" className="hidden md:flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-2 px-4 rounded-full transition-all shadow-md hover:shadow-lg">
                 <FaShoppingCart className="animate-bounce" />
                 <span className="font-medium">My Orders</span>
-              </div>
+              </Link>
             )}
           </div>
         </div>
