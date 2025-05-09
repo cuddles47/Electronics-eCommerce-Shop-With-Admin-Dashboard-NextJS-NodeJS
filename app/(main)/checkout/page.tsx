@@ -28,7 +28,6 @@ const CheckoutPage = () => {
   });
   const { products, total, clearCart } = useProductStore();
   const router = useRouter();
-
   const makePurchase = async () => {
     if (
       checkoutForm.name.length > 0 &&
@@ -82,84 +81,82 @@ const CheckoutPage = () => {
         return;
       }
 
-      // sending API request for creating a order
-      const response = fetch("http://localhost:3001/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: checkoutForm.name,
-          lastname: checkoutForm.lastname,
-          phone: checkoutForm.phone,
-          email: checkoutForm.email,
-          company: checkoutForm.company,
-          adress: checkoutForm.adress,
-          apartment: checkoutForm.apartment,
-          postalCode: checkoutForm.postalCode,
-          status: "processing",
-          total: total,
-          city: checkoutForm.city,
-          country: checkoutForm.country,
-          orderNotice: checkoutForm.orderNotice,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          const orderId: string = data.id;
-          // for every product in the order we are calling addOrderProduct function that adds fields to the customer_order_product table
-          for (let i = 0; i < products.length; i++) {
-            let productId: string = products[i].id;
-            addOrderProduct(orderId, products[i].id, products[i].amount);
-          }
-        })
-        .then(() => {
-          setCheckoutForm({
-            name: "",
-            lastname: "",
-            phone: "",
-            email: "",
-            cardName: "",
-            cardNumber: "",
-            expirationDate: "",
-            cvc: "",
-            company: "",
-            adress: "",
-            apartment: "",
-            city: "",
-            country: "",
-            postalCode: "",
-            orderNotice: "",
-          });
-          clearCart();
-          toast.success("Order created successfuly");
-          setTimeout(() => {
-            router.push("/");
-          }, 1000);
+      // sending API request for creating an order
+      const loadingToast = toast.loading('Processing your order...');
+      
+      try {
+        const response = await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: checkoutForm.name,
+            lastname: checkoutForm.lastname,
+            phone: checkoutForm.phone,
+            email: checkoutForm.email,
+            company: checkoutForm.company || "",
+            adress: checkoutForm.adress,
+            apartment: checkoutForm.apartment || "",
+            postalCode: checkoutForm.postalCode,
+            status: "processing",
+            total: total,
+            city: checkoutForm.city,
+            country: checkoutForm.country,
+            orderNotice: checkoutForm.orderNotice || "",
+            paymentMethod: "card",
+            products: products.map(item => ({
+              productId: item.id,
+              quantity: item.amount
+            }))
+          }),
         });
+        
+        toast.dismiss(loadingToast);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to create order");
+        }
+        
+        const data = await response.json();
+        const orderId = data.id;
+        
+        // Clear form and cart
+        setCheckoutForm({
+          name: "",
+          lastname: "",
+          phone: "",
+          email: "",
+          cardName: "",
+          cardNumber: "",
+          expirationDate: "",
+          cvc: "",
+          company: "",
+          adress: "",
+          apartment: "",
+          city: "",
+          country: "",
+          postalCode: "",
+          orderNotice: "",
+        });
+        clearCart();
+        
+        toast.success(`Order #${orderId.substring(0, 8)} created successfully!`);
+        
+        // Redirect to order detail page
+        setTimeout(() => {
+          router.push(`/orders/${orderId}`);
+        }, 1500);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Failed to create order");
+        console.error("Checkout error:", error);
+      }
     } else {
       toast.error("You need to enter values in the input fields");
     }
   };
-
-  const addOrderProduct = async (
-    orderId: string,
-    productId: string,
-    productQuantity: number
-  ) => {
-    // sending API POST request for the table customer_order_product that does many to many relatioship for order and product
-    const response = await fetch("http://localhost:3001/api/order-product", {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        customerOrderId: orderId,
-        productId: productId,
-        quantity: productQuantity,
-      }),
-    });
-  };
+  // Order products are now handled directly in the order creation API
 
   
 
