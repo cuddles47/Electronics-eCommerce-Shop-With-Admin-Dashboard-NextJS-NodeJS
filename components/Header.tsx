@@ -10,7 +10,7 @@
 
 "use client";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import HeaderTop from "./HeaderTop";
 import Image from "next/image";
 import SearchInput from "./SearchInput";
@@ -29,10 +29,42 @@ const Header = () => {
   const pathname = usePathname();
   const { wishlist, setWishlist, wishQuantity } = useWishlistStore();
   const [scrolled, setScrolled] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const notificationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const profileTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleLogout = () => {
     setTimeout(() => signOut(), 1000);
     toast.success("Logout successful!");
+  };
+
+  // Notification dropdown handlers
+  const handleNotificationEnter = () => {
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+    setNotificationDropdownOpen(true);
+  };
+
+  const handleNotificationLeave = () => {
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNotificationDropdownOpen(false);
+    }, 300);
+  };
+
+  // Profile dropdown handlers
+  const handleProfileEnter = () => {
+    if (profileTimeoutRef.current) {
+      clearTimeout(profileTimeoutRef.current);
+    }
+    setProfileDropdownOpen(true);
+  };
+
+  const handleProfileLeave = () => {
+    profileTimeoutRef.current = setTimeout(() => {
+      setProfileDropdownOpen(false);
+    }, 300);
   };
 
   // getting all wishlist items by user id
@@ -89,6 +121,18 @@ const Header = () => {
     };
   }, []);
 
+  // Cleanup timeouts when component unmounts
+  useEffect(() => {
+    return () => {
+      if (notificationTimeoutRef.current) {
+        clearTimeout(notificationTimeoutRef.current);
+      }
+      if (profileTimeoutRef.current) {
+        clearTimeout(profileTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <header className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-lg' : ''}`}>
       <HeaderTop />
@@ -127,39 +171,55 @@ const Header = () => {
               alt="singitronic logo"
               className={`w-56 h-auto transition-all duration-300 ${scrolled ? 'scale-90' : ''}`}
             />
-          </Link>
-          <div className="flex gap-x-5 items-center">
-            <div className="relative group">
-              <FaBell className="text-xl text-orange-500 cursor-pointer hover:text-orange-600 transition-colors" />
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">2</span>
-              <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-2 hidden group-hover:block transition-all z-10 border border-orange-100">
-                <div className="text-sm font-medium text-gray-700">You have 2 new notifications</div>
-              </div>
-            </div>
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="w-10 hover:ring-2 hover:ring-orange-400 rounded-full transition-all">
-                <Image
-                  src="/randomuser.jpg"
-                  alt="random profile photo"
-                  width={30}
-                  height={30}
-                  className="w-full h-full rounded-full"
-                />
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow-lg bg-white rounded-lg w-52 border border-orange-100"
+          </Link>          <div className="flex gap-x-5 items-center">            <div className="relative">
+              <div 
+                onMouseEnter={handleNotificationEnter}
+                onMouseLeave={handleNotificationLeave}
               >
-                <li className="hover:bg-orange-50 rounded-md transition-colors">
-                  <Link href="/admin">Dashboard</Link>
-                </li>
-                <li className="hover:bg-orange-50 rounded-md transition-colors">
-                  <a>Profile</a>
-                </li>
-                <li onClick={handleLogout} className="hover:bg-red-50 rounded-md transition-colors">
-                  <a href="#" className="text-red-500">Logout</a>
-                </li>
-              </ul>
+                <FaBell className="text-xl text-orange-500 cursor-pointer hover:text-orange-600 transition-colors" />
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">2</span>
+              </div>
+              {notificationDropdownOpen && (
+                <div 
+                  className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-2 z-10 border border-orange-100"
+                  onMouseEnter={handleNotificationEnter}
+                  onMouseLeave={handleNotificationLeave}
+                >
+                  <div className="text-sm font-medium text-gray-700">You have 2 new notifications</div>
+                </div>
+              )}
+            </div>            <div className="relative">
+              <div 
+                onMouseEnter={handleProfileEnter}
+                onMouseLeave={handleProfileLeave}
+              >
+                <div className="w-10 hover:ring-2 hover:ring-orange-400 rounded-full transition-all cursor-pointer">
+                  <Image
+                    src="/randomuser.jpg"
+                    alt="random profile photo"
+                    width={30}
+                    height={30}
+                    className="w-full h-full rounded-full"
+                  />
+                </div>
+              </div>
+              {profileDropdownOpen && (
+                <ul 
+                  className="absolute right-0 mt-2 z-[1] py-2 shadow-lg bg-white rounded-lg w-52 border border-orange-100"
+                  onMouseEnter={handleProfileEnter}
+                  onMouseLeave={handleProfileLeave}
+                >
+                  <li className="hover:bg-orange-50 transition-colors">
+                    <Link href="/admin" className="block px-4 py-2 rounded-md">Dashboard</Link>
+                  </li>
+                  <li className="hover:bg-orange-50 transition-colors">
+                    <a className="block px-4 py-2 rounded-md cursor-pointer">Profile</a>
+                  </li>
+                  <li onClick={handleLogout} className="hover:bg-red-50 transition-colors">
+                    <a href="#" className="block px-4 py-2 rounded-md text-red-500">Logout</a>
+                  </li>
+                </ul>
+              )}
             </div>
           </div>
         </div>

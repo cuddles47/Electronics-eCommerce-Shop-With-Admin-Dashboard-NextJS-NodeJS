@@ -11,7 +11,7 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { FaHeadphones } from "react-icons/fa6";
 import { FaRegEnvelope } from "react-icons/fa6";
@@ -29,6 +29,8 @@ import { RiSparklingFill, RiSparklingLine } from "react-icons/ri";
 const HeaderTop = () => {
   const { data: session }: any = useSession();
   const [showPromotion, setShowPromotion] = useState(true);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userDropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [activePromo, setActivePromo] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
   const [zipcode, setZipcode] = useState("");
@@ -46,6 +48,29 @@ const HeaderTop = () => {
     setTimeout(() => signOut(), 1000);
     toast.success("Logout successful!");
   }
+
+  // User dropdown handlers
+  const handleUserDropdownEnter = () => {
+    if (userDropdownTimeoutRef.current) {
+      clearTimeout(userDropdownTimeoutRef.current);
+    }
+    setUserDropdownOpen(true);
+  };
+
+  const handleUserDropdownLeave = () => {
+    userDropdownTimeoutRef.current = setTimeout(() => {
+      setUserDropdownOpen(false);
+    }, 300);
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (userDropdownTimeoutRef.current) {
+        clearTimeout(userDropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Mark component as mounted on client-side
   useEffect(() => {
@@ -360,21 +385,27 @@ const HeaderTop = () => {
             </li>
             </>
             ) : (
-            <>
-              {/* Logged in user dropdown */}
-              <div className="relative group">
-                <div className="flex items-center gap-x-2 ml-10 cursor-pointer">
+            <>              {/* Logged in user dropdown */}
+              <div className="relative">
+                <div className="flex items-center gap-x-2 ml-10 cursor-pointer"
+                     onMouseEnter={handleUserDropdownEnter}
+                     onMouseLeave={handleUserDropdownLeave}
+                >
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-orange-700 truncate max-w-[150px] group-hover:text-orange-600 transition-colors">
+                  <span className="text-sm text-orange-700 truncate max-w-[150px] hover:text-orange-600 transition-colors">
                     {session.user?.email}
                   </span>
-                  <svg className="w-3 h-3 text-orange-500 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className={`w-3 h-3 text-orange-500 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
                 </div>
                 
-                {/* User dropdown menu */}
-                <div className="absolute top-full right-0 mt-2 bg-white shadow-md rounded-md py-2 w-48 hidden group-hover:block z-10 border border-orange-100">
+                {/* User dropdown menu */}                {userDropdownOpen && (
+                <div 
+                  className="absolute top-full right-0 mt-2 bg-white shadow-md rounded-md py-2 w-48 z-10 border border-orange-100"
+                  onMouseEnter={handleUserDropdownEnter}
+                  onMouseLeave={handleUserDropdownLeave}
+                >
                   <Link href="/account" className="flex items-center gap-x-2 px-4 py-1.5 hover:bg-orange-50 text-orange-800">
                     <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -404,6 +435,7 @@ const HeaderTop = () => {
                     <span className="text-sm font-medium">Log out</span>
                   </button>
                 </div>
+                )}
               </div>
             </>)}
           </ul>
