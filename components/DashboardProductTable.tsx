@@ -14,20 +14,30 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CustomButton from "./CustomButton";
+import { safeFetch } from "@/utils/fetchUtil";
 
 const DashboardProductTable = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/products?mode=admin", {cache: "no-store"})
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setProducts(data);
-      });
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await safeFetch("http://localhost:3001/api/products?mode=admin", {cache: "no-store"});
+        setProducts(data || []);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProducts();
   }, []);
-
   return (
     <div className="w-full">
       <h1 className="text-3xl font-semibold text-center mb-5">All products</h1>
@@ -44,26 +54,36 @@ const DashboardProductTable = () => {
         </Link>
       </div>
 
-      <div className="xl:ml-5 w-full max-xl:mt-5 overflow-auto w-full h-[80vh]">
-        <table className="table table-md table-pin-cols">
-          {/* head */}
-          <thead>
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <th>Product</th>
-              <th>Stock Availability</th>
-              <th>Price</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* row 1 */}
-            {products &&
-              products.map((product) => (
+      {loading ? (
+        <div className="text-center py-10">
+          <span className="loading loading-spinner loading-lg"></span>
+          <p className="mt-2">Loading products...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center py-10 text-error">
+          <p>{error}</p>
+        </div>
+      ) : (
+        <div className="xl:ml-5 w-full max-xl:mt-5 overflow-auto w-full h-[80vh]">
+          <table className="table table-md table-pin-cols">
+            {/* head */}
+            <thead>
+              <tr>
+                <th>
+                  <label>
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                </th>
+                <th>Product</th>
+                <th>Stock Availability</th>
+                <th>Price</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* row 1 */}
+              {products && products.length > 0 ? (
+                products.map((product) => (
                 <tr key={nanoid()}>
                   <th>
                     <label>
@@ -109,22 +129,29 @@ const DashboardProductTable = () => {
                     >
                       details
                     </Link>
-                  </th>
+                  </th>                </tr>
+              ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-4">
+                    No products found
+                  </td>
                 </tr>
-              ))}
-          </tbody>
-          {/* foot */}
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>Product</th>
-              <th>Stock Availability</th>
-              <th>Price</th>
-              <th></th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+              )}
+            </tbody>
+            {/* foot */}
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Product</th>
+                <th>Stock Availability</th>
+                <th>Price</th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

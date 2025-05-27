@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
@@ -123,9 +124,8 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   if (!order) {
     return (
       <div className="container mx-auto p-8 max-w-6xl">
-        <div className="text-center py-16 bg-gray-50 rounded-lg">
-          <h2 className="text-2xl font-medium text-gray-600 mb-4">Order not found</h2>
-          <p className="text-gray-500 mb-8">The order you're looking for doesn't exist or you don't have permission to view it.</p>
+        <div className="text-center py-16 bg-gray-50 rounded-lg">          <h2 className="text-2xl font-medium text-gray-600 mb-4">Order not found</h2>
+          <p className="text-gray-500 mb-8">The order you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
           <Link href="/orders" className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-md font-medium transition-colors">
             Back to Orders
           </Link>
@@ -170,12 +170,13 @@ const OrderDetailPage = ({ params }: { params: { id: string } }) => {
           <h2 className="text-xl font-semibold mb-4">Order Items</h2>
           <div className="space-y-6">
             {order.products.map((item) => (
-              <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b border-gray-100 pb-6">
-                <div className="w-24 h-24 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                  <img 
+              <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b border-gray-100 pb-6">                <div className="w-24 h-24 bg-gray-100 rounded overflow-hidden flex-shrink-0 relative">
+                  <Image 
                     src={item.product.mainImage} 
                     alt={item.product.title} 
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 96px) 100vw, 96px"
+                    className="object-cover"
                   />
                 </div>
                 <div className="flex-grow">

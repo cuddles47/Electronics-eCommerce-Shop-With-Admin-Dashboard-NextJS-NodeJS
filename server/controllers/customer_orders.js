@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { nanoid } = require("nanoid");
 const prisma = new PrismaClient();
 
 async function createCustomerOrder(request, response) {
@@ -17,9 +18,9 @@ async function createCustomerOrder(request, response) {
       country,
       orderNotice,
       total,
-    } = request.body;
-    const corder = await prisma.customer_order.create({
+    } = request.body;    const corder = await prisma.customer_order.create({
       data: {
+        id: nanoid(),
         name,
         lastname,
         phone,

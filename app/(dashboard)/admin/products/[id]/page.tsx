@@ -98,25 +98,7 @@ const DashboardProductDetails = ({
     } catch (error) {
       console.error("There was an error while during request sending:", error);
       toast.error("There was an error during request sending");
-    }
-  };
-
-  // fetching main product data including other product images
-  const fetchProductData = async () => {
-    fetch(`http://localhost:3001/api/products/${id}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setProduct(data);
-      });
-
-    const imagesData = await fetch(`http://localhost:3001/api/images/${id}`, {
-      cache: "no-store",
-    });
-    const images = await imagesData.json();
-    setOtherImages((currentImages) => images);
-  };
+    }  };
 
   // fetching all product categories. It will be used for displaying categories in select category input
   const fetchCategories = async () => {
@@ -131,8 +113,26 @@ const DashboardProductDetails = ({
 
   useEffect(() => {
     fetchCategories();
+    
+    // fetching main product data including other product images
+    const fetchProductData = async () => {
+      fetch(`http://localhost:3001/api/products/${id}`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          setProduct(data);
+        });
+
+      const imagesData = await fetch(`http://localhost:3001/api/images/${id}`, {
+        cache: "no-store",
+      });
+      const images = await imagesData.json();
+      setOtherImages((currentImages) => images);
+    };
+    
     fetchProductData();
-  }, [id, fetchProductData]);
+  }, [id]);
 
   return (
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">

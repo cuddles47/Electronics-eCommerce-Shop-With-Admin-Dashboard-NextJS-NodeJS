@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
+import { nanoid } from "nanoid";
 
 const prisma = new PrismaClient();
 
@@ -85,6 +86,7 @@ export async function POST(request: Request) {
     }    // Create the order
     const order = await prisma.customer_order.create({
       data: {
+        id: nanoid(),
         name,
         lastname,
         phone,

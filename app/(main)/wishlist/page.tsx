@@ -4,48 +4,67 @@ import React, { useEffect, useState } from "react";
 import { useWishlistStore } from "../../_zustand/wishlistStore";
 import { nanoid } from "nanoid";
 import { useSession } from "next-auth/react";
+import { safeFetch } from "@/utils/fetchUtil";
 
 
 
 const WishlistPage = () => {
   const { data: session, status } = useSession();
   const {wishlist, setWishlist}= useWishlistStore();
-
   const getWishlistByUserId = async (id: string) => {
-    const response = await fetch(`http://localhost:3001/api/wishlist/${id}`, {
-      cache: "no-store",
-    });
-    const wishlist = await response.json();
-
-    const productArray: {
-      id: string;
-      title: string;
-      price: number;
-      image: string;
-      slug:string
-      stockAvailabillity: number;
-    }[] = [];
-    
-    wishlist.map((item:any) => productArray.push({id: item?.product?.id, title: item?.product?.title, price: item?.product?.price, image: item?.product?.mainImage, slug: item?.product?.slug, stockAvailabillity: item?.product?.inStock}));
-    
-    setWishlist(productArray);
-  };
-
-  const getUserByEmail = async () => {
-    if (session?.user?.email) {
-      fetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
+    try {
+      const wishlist = await safeFetch(`http://localhost:3001/api/wishlist/${id}`, {
         cache: "no-store",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          getWishlistByUserId(data?.id);
-        });
+      });
+
+      if (!wishlist) {
+        setWishlist([]);
+        return;
+      }
+
+      const productArray: {
+        id: string;
+        title: string;
+        price: number;
+        image: string;
+        slug:string
+        stockAvailabillity: number;
+      }[] = [];
+      
+      wishlist.map((item:any) => productArray.push({
+        id: item?.product?.id, 
+        title: item?.product?.title, 
+        price: item?.product?.price, 
+        image: item?.product?.mainImage, 
+        slug: item?.product?.slug, 
+        stockAvailabillity: item?.product?.inStock
+      }));
+      
+      setWishlist(productArray);
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+      setWishlist([]);
     }
   };
-
   useEffect(() => {
+    const getUserByEmail = async () => {
+      if (session?.user?.email) {
+        try {
+          const userData = await safeFetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
+            cache: "no-store",
+          });
+          
+          if (userData?.id) {
+            getWishlistByUserId(userData.id);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+    
     getUserByEmail();
-  }, [session?.user?.email, wishlist.length, getUserByEmail]);
+  }, [session?.user?.email, wishlist.length]);
   return (
     <div className="bg-white">
       <SectionTitle title="Wishlist" path="Home | Wishlist" />

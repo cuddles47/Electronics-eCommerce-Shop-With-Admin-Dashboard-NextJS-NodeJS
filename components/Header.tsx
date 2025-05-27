@@ -23,6 +23,7 @@ import HeartElement from "./HeartElement";
 import { signOut, useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useWishlistStore } from "@/app/_zustand/wishlistStore";
+import { safeFetch } from "@/utils/fetchUtil";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -66,42 +67,60 @@ const Header = () => {
       setProfileDropdownOpen(false);
     }, 300);
   };
-
   // getting all wishlist items by user id
   const getWishlistByUserId = async (id: string) => {
-    const response = await fetch(`http://localhost:3001/api/wishlist/${id}`, {
-      cache: "no-store",
-    });
-    const wishlist = await response.json();
-    const productArray: {
-      id: string;
-      title: string;
-      price: number;
-      image: string;
-      slug:string
-      stockAvailabillity: number;
-    }[] = [];
-    
-    wishlist.map((item: any) => productArray.push({id: item?.product?.id, title: item?.product?.title, price: item?.product?.price, image: item?.product?.mainImage, slug: item?.product?.slug, stockAvailabillity: item?.product?.inStock}));
-    
-    setWishlist(productArray);
-  };
-
-  // getting user by email so I can get his user id
-  const getUserByEmail = async () => {
-    if (session?.user?.email) {
-      
-      fetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
+    try {
+      const wishlist = await safeFetch(`http://localhost:3001/api/wishlist/${id}`, {
         cache: "no-store",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          getWishlistByUserId(data?.id);
-        });
+      });
+      
+      if (!wishlist || !Array.isArray(wishlist)) return;
+      
+      const productArray: {
+        id: string;
+        title: string;
+        price: number;
+        image: string;
+        slug:string
+        stockAvailabillity: number;
+      }[] = [];
+      
+      wishlist.forEach((item: any) => {
+        if (item?.product) {
+          productArray.push({
+            id: item.product.id, 
+            title: item.product.title, 
+            price: item.product.price, 
+            image: item.product.mainImage, 
+            slug: item.product.slug, 
+            stockAvailabillity: item.product.inStock
+          });
+        }
+      });
+      
+      setWishlist(productArray);
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
     }
   };
-
   useEffect(() => {
+    // getting user by email so I can get his user id
+    const getUserByEmail = async () => {
+      if (session?.user?.email) {
+        try {
+          const userData = await safeFetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
+            cache: "no-store",
+          });
+          
+          if (userData?.id) {
+            getWishlistByUserId(userData.id);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+    
     getUserByEmail();
   }, [session?.user?.email, wishlist.length]);
 
@@ -137,10 +156,9 @@ const Header = () => {
     <header className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-lg' : ''}`}>
       <HeaderTop />
       {pathname.startsWith("/admin") === false && (
-        <div className={`bg-gradient-to-r from-white via-[#fff8f0] to-white transition-all duration-300 flex items-center justify-between px-16 max-[1320px]:px-16 max-md:px-6 max-lg:flex-col max-lg:gap-y-7 max-lg:justify-center max-lg:h-auto py-4 max-w-screen-2xl mx-auto ${scrolled ? 'h-24' : 'h-32'}`}>
-          <Link href="/" className="transition-transform duration-300 hover:scale-105 relative">
+        <div className={`bg-gradient-to-r from-white via-[#fff8f0] to-white transition-all duration-300 flex items-center justify-between px-16 max-[1320px]:px-16 max-md:px-6 max-lg:flex-col max-lg:gap-y-7 max-lg:justify-center max-lg:h-auto py-4 max-w-screen-2xl mx-auto ${scrolled ? 'h-24' : 'h-32'}`}>          <Link href="/" className="transition-transform duration-300 hover:scale-105 relative">
             {/* <div className="absolute -top-1 -right-1 w-16 h-16 bg-orange-500/10 rounded-full animate-ping-slow opacity-75"></div> */}
-            <img 
+            <Image 
               src="/logo v1.png" 
               width={300} 
               height={300} 

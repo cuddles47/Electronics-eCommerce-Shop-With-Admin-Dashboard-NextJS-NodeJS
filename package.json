@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:prod": "cross-env IS_BUILD_TIME=true next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -45,6 +46,7 @@
     "@types/react-dom": "^18",
     "@types/zxcvbn": "^4.4.5",
     "autoprefixer": "^10.0.1",
+    "cross-env": "^7.0.3",
     "daisyui": "^4.7.2",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",

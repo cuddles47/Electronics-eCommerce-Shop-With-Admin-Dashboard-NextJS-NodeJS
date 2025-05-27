@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getSession, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -128,8 +129,7 @@ const OrdersPage = () => {
       <h1 className="text-3xl font-bold mb-8 text-gray-800">My Orders</h1>
 
       {orders.length === 0 ? (
-        <div className="text-center py-16 bg-gray-50 rounded-lg">
-          <h2 className="text-2xl font-medium text-gray-600 mb-4">You haven't placed any orders yet</h2>
+        <div className="text-center py-16 bg-gray-50 rounded-lg">          <h2 className="text-2xl font-medium text-gray-600 mb-4">You haven&apos;t placed any orders yet</h2>
           <p className="text-gray-500 mb-8">Start shopping to see your orders here.</p>
           <Link href="/" className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-md font-medium transition-colors">
             Browse Products
@@ -164,13 +164,14 @@ const OrdersPage = () => {
               </div>
               <div className="p-4 sm:p-6 bg-white">
                 <div className="space-y-4">
-                  {order.products.slice(0, 3).map((item) => (
-                    <div key={item.id} className="flex items-center gap-4">
-                      <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                        <img 
+                  {order.products.slice(0, 3).map((item) => (                    <div key={item.id} className="flex items-center gap-4">
+                      <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded overflow-hidden relative">
+                        <Image 
                           src={item.product.mainImage} 
                           alt={item.product.title} 
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="(max-width: 64px) 100vw, 64px"
+                          className="object-cover"
                         />
                       </div>
                       <div className="flex-grow">

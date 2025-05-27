@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { authOptions } from "./auth-options";
 
-// Extend các type để hỗ trợ role và id
+// Extend the types for NextAuth
 declare module "next-auth" {
   interface User {
     role?: string;
@@ -25,6 +25,9 @@ declare module "next-auth/jwt" {
   }
 }
 
-// Export the GET and POST handlers that NextAuth needs
+// Create and export the handler using the auth options
 export const GET = NextAuth(authOptions);
 export const POST = NextAuth(authOptions);
+
+// Re-export authOptions for use in other parts of the application
+export { authOptions } from "./auth-options";

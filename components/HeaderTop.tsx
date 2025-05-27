@@ -71,19 +71,18 @@ const HeaderTop = () => {
       }
     };
   }, []);
-
   // Mark component as mounted on client-side
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Update promotion carousel
+  // Update promotion carousel  
   useEffect(() => {
     const timer = setInterval(() => {
       setActivePromo((prev) => (prev + 1) % promos.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [promos.length]);
 
   // Update current time
   useEffect(() => {

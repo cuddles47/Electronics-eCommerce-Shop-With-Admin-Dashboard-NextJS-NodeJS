@@ -13,7 +13,12 @@ const nextConfig = {
             port: ""
           },
         ],
-      },
+    },
+    // Add this configuration to handle static pages more carefully
+    experimental: {
+      // This helps with pages that might have data fetching errors during build
+      missingSuspenseWithCSRFallback: true,
+    },
 };
 
 export default nextConfig;
